@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth anchor scrolling + offset for the fixed header */
+html {
+  scroll-behavior: smooth;
+}
+section[id] {
+  scroll-margin-top: 90px;
+}
+
+/* ================================================
+   TYPE UTILITIES (uses fonts provided in layout)
+================================================ */
+.title-serif {
+  font-family: var(--font-serif), serif;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.figcaption-elegant {
+  font-family: var(--font-serif), serif;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: #1f2937; /* slate-800 */
+}
+
+/* Better focus for keyboard users */
+a:focus-visible,
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.35); /* slate-ish */
+  border-radius: 12px;
+}
+
+/* =========================================================
+   FLIP SYSTEM (Activities, Gallery, Archives)
+   - Hover flips on desktop.
+   - Tap toggles .flipped on mobile (handled in component).
+   - Back panel is warm & readable (luxury neutral).
+========================================================= */
+.flip-card {
+  position: relative;
+  perspective: 1400px;
+  -webkit-perspective: 1400px;
+  border-radius: 16px; /* like rounded-2xl */
+  overflow: hidden;
+}
+
+.flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 800ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 800ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  border-radius: 16px;
+}
+
+/* Desktop hover */
+@media (hover: hover) and (pointer: fine) {
+  .flip-card:hover .flip-inner {
+    transform: rotateY(180deg) scale(1.02);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  }
+}
+
+/* Mobile: .flipped gets toggled on the wrapper */
+.flip-card.flipped .flip-inner {
+  transform: rotateY(180deg) scale(1.02);
+}
+
+/* Faces */
+.flip-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.flip-front {
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  z-index: 2;
+}
+
+/* Upscale warm neutral back */
+.flip-back {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  background: #f6f4ef; /* warm ecru */
+  color: #1f2937; /* slate-800 */
+  padding: 1.5rem;
+  z-index: 1;
+}
+
+/* When flipped/hovering, ensure back sits on top */
+@media (hover: hover) and (pointer: fine) {
+  .flip-card:hover .flip-back {
+    z-index: 3;
+  }
+}
+.flip-card.flipped .flip-back {
+  z-index: 3;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .flip-inner {
+    transition: none !important;
+    transform: none !important;
+  }
+  .flip-card:hover .flip-inner,
+  .flip-card.flipped .flip-inner {
+    transform: none !important;
+  }
+}
